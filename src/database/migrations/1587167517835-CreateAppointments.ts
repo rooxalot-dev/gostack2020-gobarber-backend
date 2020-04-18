@@ -20,8 +20,20 @@ export default class CreateAppointments1587167517835 implements MigrationInterfa
           },
           {
             name: 'date',
-            type: 'timestamp with time zone', // Tipo existente somente no banco de dados Postgres
+            type: 'timestamp with time zone',
             isNullable: false,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp with time zone',
+            isNullable: false,
+            default: 'now()',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp with time zone',
+            isNullable: false,
+            default: 'now()',
           },
         ],
       }),

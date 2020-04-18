@@ -1,5 +1,5 @@
 import {
-  Entity, Column, PrimaryGeneratedColumn, Generated,
+  Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'appointments' })
@@ -13,6 +13,12 @@ class Appointment {
 
   @Column('timestamp with time zone')
   date: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
 
 export default Appointment;
