@@ -9,11 +9,11 @@ const appointmentRouter = Router();
 
 appointmentRouter.post('/', async (request: Request, response: Response) => {
   const service = new CreateAppointmentService();
-  const { provider, date } = request.body;
+  const { providerID, date } = request.body;
 
   try {
     const parsedDate = parseISO(date);
-    const appointment = await service.execute({ provider, date: parsedDate });
+    const appointment = await service.execute({ providerID, date: parsedDate });
 
     return response.status(201).json(appointment);
   } catch (error) {

@@ -8,16 +8,16 @@ export interface CreateAppointmentDTO {
 }
 
 export interface FindAppointmentDTO {
-  provider: string;
+  providerID: string;
   date: Date;
 }
 
 @EntityRepository(Appointment)
 class AppointmentsRepository extends Repository<Appointment> {
-  public async findByProviderAndDate({ provider, date }: FindAppointmentDTO): Promise<Appointment | null> {
+  public async findByProviderAndDate({ providerID, date }: FindAppointmentDTO): Promise<Appointment | null> {
     const appointment = await this.findOne({
       where: {
-        provider,
+        providerID,
         date,
       },
     });

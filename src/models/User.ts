@@ -2,7 +2,7 @@ import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'users' })
 class User {
   @Column()
   @PrimaryGeneratedColumn('uuid')
@@ -14,13 +14,20 @@ class User {
   @Column()
   email: string;
 
-  @Column('password_hash')
+  @Column({
+    name: 'password_hash',
+    type: 'varchar',
+  })
   passwordHash: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    name: 'created_at',
+  })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    name: 'updated_at',
+  })
   updatedAt: Date;
 }
 
