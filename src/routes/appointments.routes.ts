@@ -9,7 +9,9 @@ const appointmentRouter = Router();
 
 appointmentRouter.post('/', async (request: Request, response: Response) => {
   const service = new CreateAppointmentService();
-  const { providerID, date } = request.body;
+
+  const { date } = request.body;
+  const { id: providerID } = request.user;
 
   try {
     const parsedDate = parseISO(date);
@@ -17,18 +19,24 @@ appointmentRouter.post('/', async (request: Request, response: Response) => {
 
     return response.status(201).json(appointment);
   } catch (error) {
-    return response.status(400).json({
-      message: error.message,
-    });
+    return response.status(400).json({ message: error.message  });
   }
 });
 
 appointmentRouter.get('/', async (request: Request, response: Response) => {
   const repository = getCustomRepository(AppointmentsRepository);
 
-  const appointments = await repository.find();
+  const { id: providerID } = request.user;
 
-  return response.json(appointments);
+  try {
+    const appointments = await repository.find({
+      where: { providerID },
+    });
+
+    return response.json(appointments);
+  } catch (error) {
+    return response.status(400).json({ message: error.message });
+  }
 });
 
 export default appointmentRouter;

@@ -9,7 +9,7 @@ const authenticationMiddleware = async (
   next: NextFunction,
 ) => {
   const { authorization } = request.headers;
-  let userToken = <string>authorization || '';
+  let userToken = authorization as string;
   userToken = userToken
     .replace('Bearer', '')
     .replace(' ', '');
@@ -24,7 +24,7 @@ const authenticationMiddleware = async (
       });
     }
 
-    response.locals.user = validToken as UserToken;
+    request.user = validToken as UserToken;
 
     return next();
   } catch (error) {

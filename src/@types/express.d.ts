@@ -1,7 +1,9 @@
-import User, { UserToken } from '../models/User';
-
 declare namespace Express {
   export interface Request {
-    user: UserToken
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    }
   }
 }
