@@ -2,6 +2,12 @@ import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 
+export interface UserToken {
+  id: string;
+  name: string;
+  email: string;
+}
+
 @Entity({ name: 'users' })
 class User {
   @Column()
