@@ -10,6 +10,12 @@
             "protocol": "inspector",
             "name": "Debug",
             "restart": true,
+            "smartStep": true,
+            "skipFiles": [
+              "<node_internals>/**",
+              "inspector_async_hook.js",
+              "async_hooks.js"
+            ],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]

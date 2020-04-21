@@ -1,4 +1,8 @@
 import { Repository, getRepository } from 'typeorm';
+import { join } from 'path';
+import fs from 'fs';
+
+import uploadOptions from '../../config/upload';
 import User from '../../models/User';
 
 
@@ -19,6 +23,16 @@ class UpdateUserAvatarService {
 
     if (!user) {
       throw new Error('User not found!');
+    }
+
+    if (user.avatar) {
+      const previousUserAvatarFile = join(uploadOptions.tempDirectory, user.avatar);
+      try {
+        const fileStats = await fs.promises.stat(previousUserAvatarFile);
+        if (fileStats) {
+          await fs.promises.unlink(previousUserAvatarFile);
+        }
+      } catch { const bypass = true; }
     }
 
     delete user.passwordHash;

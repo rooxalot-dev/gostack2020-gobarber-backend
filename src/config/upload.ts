@@ -1,10 +1,14 @@
 import { resolve } from 'path';
 import crypto from 'crypto';
-import { Options, diskStorage } from 'multer';
+import { diskStorage } from 'multer';
 
-const uploadOptions: Options = {
+const tmpFolder = resolve(__dirname, '..', '..', 'tmp');
+
+const uploadOptions = {
+  tempDirectory: tmpFolder,
+
   storage: diskStorage({
-    destination: resolve(__dirname, '..', '..', 'tmp'),
+    destination: tmpFolder,
     filename: (request, filename, cb) => {
       const hash = crypto.randomBytes(10).toString('HEX');
       const newFilename = `${hash}-${filename.originalname}`;

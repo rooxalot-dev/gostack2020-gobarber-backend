@@ -2,7 +2,9 @@ import { Router } from 'express';
 import multer from 'multer';
 
 import uploadOptions from '../config/upload';
+
 import authenticationMiddleware from './middlewares/authentication.middleware';
+
 import CreateUserService from '../services/Users/CreateUserService';
 import UpdateUserAvatarService from '../services/Users/UpdateUserAvatarService';
 
