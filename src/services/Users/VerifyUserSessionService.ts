@@ -2,6 +2,7 @@ import { Repository, getRepository } from 'typeorm';
 import { verify } from 'jsonwebtoken';
 
 import User, { UserToken } from '../../models/User';
+import AppError from '../../errors/AppError';
 
 class VerifyUserSessionService {
   userRepository: Repository<User>;
@@ -14,13 +15,13 @@ class VerifyUserSessionService {
     const { APP_KEY } = process.env;
 
     if (!token || token === '') {
-      throw new Error('Token not informed!');
+      throw new AppError('Token not informed!', 401);
     }
 
     const userToken: UserToken = <UserToken>verify(token, APP_KEY || '');
 
     if (!userToken) {
-      throw new Error('Invalid token informed!');
+      throw new AppError('Invalid token informed!', 401);
     }
 
     const user = this.userRepository.findOne({
@@ -28,7 +29,7 @@ class VerifyUserSessionService {
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new AppError('User not found', 401);
     }
 
     return userToken;

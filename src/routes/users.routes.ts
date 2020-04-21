@@ -16,32 +16,22 @@ userRouter.post('/', async (request, response) => {
     name, email, password, confirmPassword,
   } = request.body;
 
-  try {
-    const createUserService = new CreateUserService();
+  const createUserService = new CreateUserService();
+  const user = await createUserService.execute({
+    name, email, password, confirmPassword,
+  });
 
-    const user = await createUserService.execute({
-      name, email, password, confirmPassword,
-    });
-
-    return response.json(user);
-  } catch (error) {
-    return response.status(400).json({ message: error.message });
-  }
+  return response.json(user);
 });
 
 userRouter.patch('/avatar', authenticationMiddleware, upload.single('avatar'), async (request, response) => {
   const { id } = request.user;
   const { filename } = request.file;
 
-  try {
-    const updateUserAvatarService = new UpdateUserAvatarService();
+  const updateUserAvatarService = new UpdateUserAvatarService();
+  const user = await updateUserAvatarService.execute({ userID: id, avatarPath: filename });
 
-    const user = await updateUserAvatarService.execute({ userID: id, avatarPath: filename });
-
-    return response.json(user);
-  } catch (error) {
-    return response.status(400).json({ message: error.message });
-  }
+  return response.json(user);
 });
 
 export default userRouter;

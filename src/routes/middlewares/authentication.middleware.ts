@@ -9,29 +9,15 @@ const authenticationMiddleware = async (
   next: NextFunction,
 ) => {
   const { authorization } = request.headers;
-  let userToken = authorization as string;
-  userToken = userToken
-    .replace('Bearer', '')
-    .replace(' ', '');
+  let userToken = authorization || '';
+  userToken = userToken.replace('Bearer', '').replace(' ', '');
 
-  try {
-    const verifyUserSessionService = new VerifyUserSessionService();
-    const validToken = await verifyUserSessionService.execute(userToken);
+  const verifyUserSessionService = new VerifyUserSessionService();
+  const validToken = await verifyUserSessionService.execute(userToken);
 
-    if (!validToken) {
-      return response.status(400).json({
-        message: 'Invalid Token',
-      });
-    }
+  request.user = validToken as UserToken;
 
-    request.user = validToken as UserToken;
-
-    return next();
-  } catch (error) {
-    return response.status(400).json({
-      message: error.message,
-    });
-  }
+  return next();
 };
 
 export default authenticationMiddleware;

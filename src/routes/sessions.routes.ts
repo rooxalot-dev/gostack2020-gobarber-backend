@@ -6,19 +6,11 @@ const sessionRouter = Router();
 
 sessionRouter.post('/', async (request, response) => {
   const { email, password } = request.body;
+
   const authenticateUserService = new AuthenticateUserService();
+  const token = await authenticateUserService.execute({ email, password });
 
-  try {
-    const token = await authenticateUserService.execute({
-      email, password,
-    });
-
-    return response.json({
-      token,
-    });
-  } catch (error) {
-    return response.status(400).json({ message: error.message });
-  }
+  return response.json({ token });
 });
 
 export default sessionRouter;

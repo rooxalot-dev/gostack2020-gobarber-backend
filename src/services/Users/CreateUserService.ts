@@ -2,6 +2,7 @@ import { hash } from 'bcrypt';
 import { getRepository, Repository } from 'typeorm';
 
 import User from '../../models/User';
+import AppError from '../../errors/AppError';
 
 interface CreateUserRequest {
   name: string;
@@ -25,11 +26,11 @@ class CreateUserService {
     });
 
     if (hasUserEmail) {
-      throw new Error('User email alredy exists!');
+      throw new AppError('User email alredy exists!');
     }
 
     if (password !== confirmPassword) {
-      throw new Error('Password and confirm password does not match!');
+      throw new AppError('Password and confirm password does not match!');
     }
 
     const passwordHash = await hash(password, 10);

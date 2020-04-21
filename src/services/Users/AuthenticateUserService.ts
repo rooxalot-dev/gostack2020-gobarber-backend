@@ -3,6 +3,7 @@ import { sign } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
 
 import User, { UserToken } from '../../models/User';
+import AppError from '../../errors/AppError';
 
 interface AuthenticateUserRequest {
   email: string;
@@ -23,12 +24,12 @@ class AuthenticateUserService {
       where: { email },
     });
     if (!user) {
-      throw new Error('User not found!');
+      throw new AppError('User not found!', 401);
     }
 
     const passwordsMatch = await compare(password, user.passwordHash);
     if (!passwordsMatch) {
-      throw new Error("User's password is wrong!");
+      throw new AppError("User's password is wrong!", 401);
     }
 
     const userToken: UserToken = {

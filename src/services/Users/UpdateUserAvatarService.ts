@@ -4,6 +4,7 @@ import fs from 'fs';
 
 import uploadOptions from '../../config/upload';
 import User from '../../models/User';
+import AppError from '../../errors/AppError';
 
 
 interface UpdateUserAvatarRequest {
@@ -22,7 +23,7 @@ class UpdateUserAvatarService {
     const user = await this.repository.findOne(userID);
 
     if (!user) {
-      throw new Error('User not found!');
+      throw new AppError('User not found!');
     }
 
     if (user.avatar) {
@@ -41,7 +42,7 @@ class UpdateUserAvatarService {
     const { affected } = await this.repository.update(userID, { avatar: avatarPath });
 
     if (affected === 0) {
-      throw new Error("User's avatar has not been updated");
+      throw new AppError("User's avatar has not been updated");
     }
 
     return user;

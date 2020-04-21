@@ -3,6 +3,7 @@ import { getCustomRepository } from 'typeorm';
 
 import Appointment from '../../models/Appointment';
 import AppointmentsRepository from '../../repositories/AppointmentsRepository';
+import AppError from '../../errors/AppError';
 
 interface CreateAppointmentRequest {
   providerID: string;
@@ -21,7 +22,7 @@ class CreateAppointmentService {
     const hasAppointmentInSameDate = await this.repository.findByProviderAndDate({ providerID, date: appointmentDate });
 
     if (hasAppointmentInSameDate !== null) {
-      throw new Error("You can't create two appointments for the same provider in the same date!");
+      throw new AppError("You can't create two appointments for the same provider in the same date!");
     }
 
     const appointment = this.repository.create({ providerID, date: appointmentDate });

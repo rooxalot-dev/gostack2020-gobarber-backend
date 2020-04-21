@@ -8,35 +8,26 @@ import AppointmentsRepository from '../repositories/AppointmentsRepository';
 const appointmentRouter = Router();
 
 appointmentRouter.post('/', async (request: Request, response: Response) => {
-  const service = new CreateAppointmentService();
-
   const { date } = request.body;
   const { id: providerID } = request.user;
 
-  try {
-    const parsedDate = parseISO(date);
-    const appointment = await service.execute({ providerID, date: parsedDate });
+  const parsedDate = parseISO(date);
 
-    return response.status(201).json(appointment);
-  } catch (error) {
-    return response.status(400).json({ message: error.message  });
-  }
+  const service = new CreateAppointmentService();
+  const appointment = await service.execute({ providerID, date: parsedDate });
+
+  return response.status(201).json(appointment);
 });
 
 appointmentRouter.get('/', async (request: Request, response: Response) => {
-  const repository = getCustomRepository(AppointmentsRepository);
-
   const { id: providerID } = request.user;
 
-  try {
-    const appointments = await repository.find({
-      where: { providerID },
-    });
+  const repository = getCustomRepository(AppointmentsRepository);
+  const appointments = await repository.find({
+    where: { providerID },
+  });
 
-    return response.json(appointments);
-  } catch (error) {
-    return response.status(400).json({ message: error.message });
-  }
+  return response.json(appointments);
 });
 
 export default appointmentRouter;
