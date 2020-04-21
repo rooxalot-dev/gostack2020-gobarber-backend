@@ -20,20 +20,16 @@ class User {
   @Column()
   email: string;
 
-  @Column({
-    name: 'password_hash',
-    type: 'varchar',
-  })
+  @Column({ name: 'password_hash', type: 'varchar' })
   passwordHash: string;
 
-  @CreateDateColumn({
-    name: 'created_at',
-  })
+  @Column()
+  avatar: string;
+
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    name: 'updated_at',
-  })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }
 
