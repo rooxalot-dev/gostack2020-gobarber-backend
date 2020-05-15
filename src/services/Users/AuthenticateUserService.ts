@@ -10,6 +10,11 @@ interface AuthenticateUserRequest {
   password: string;
 }
 
+interface UserSessionResponse {
+  token: string;
+  user: UserToken;
+}
+
 class AuthenticateUserService {
   private repository: Repository<User>;
 
@@ -17,7 +22,7 @@ class AuthenticateUserService {
     this.repository = getRepository(User);
   }
 
-  public async execute({ email, password }: AuthenticateUserRequest): Promise<string> {
+  public async execute({ email, password }: AuthenticateUserRequest): Promise<UserSessionResponse> {
     const { APP_KEY } = process.env;
 
     const user = await this.repository.findOne({
@@ -43,7 +48,7 @@ class AuthenticateUserService {
       expiresIn: '1d',
     });
 
-    return jwt;
+    return { token: jwt, user: userToken } as UserSessionResponse;
   }
 }
 

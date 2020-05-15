@@ -10,7 +10,7 @@ sessionRouter.post('/', async (request, response) => {
   const authenticateUserService = new AuthenticateUserService();
   const token = await authenticateUserService.execute({ email, password });
 
-  return response.json({ token });
+  return response.json(token);
 });
 
 export default sessionRouter;
