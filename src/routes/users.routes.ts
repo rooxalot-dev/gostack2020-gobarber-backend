@@ -13,12 +13,12 @@ const upload = multer(uploadOptions);
 
 userRouter.post('/', async (request, response) => {
   const {
-    name, email, password, confirmPassword,
+    name, email, password,
   } = request.body;
 
   const createUserService = new CreateUserService();
   const user = await createUserService.execute({
-    name, email, password, confirmPassword,
+    name, email, password,
   });
 
   return response.json(user);

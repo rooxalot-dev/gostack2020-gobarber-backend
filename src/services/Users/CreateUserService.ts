@@ -8,7 +8,6 @@ interface CreateUserRequest {
   name: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
 class CreateUserService {
@@ -19,7 +18,7 @@ class CreateUserService {
   }
 
   public async execute({
-    name, email, password, confirmPassword,
+    name, email, password,
   }: CreateUserRequest): Promise<User> {
     const hasUserEmail = await this.repository.findOne({
       where: { email },
@@ -27,10 +26,6 @@ class CreateUserService {
 
     if (hasUserEmail) {
       throw new AppError('User email alredy exists!');
-    }
-
-    if (password !== confirmPassword) {
-      throw new AppError('Password and confirm password does not match!');
     }
 
     const passwordHash = await hash(password, 10);
