@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import authenticationMiddleware from './middlewares/authentication.middleware';
+import authenticationMiddleware from '../../middlewares/authentication.middleware';
 
 import sessionRouter from './sessions.routes';
 import appointmentRouter from './appointments.routes';

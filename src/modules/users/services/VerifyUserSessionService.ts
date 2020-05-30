@@ -1,8 +1,8 @@
 import { Repository, getRepository } from 'typeorm';
 import { verify } from 'jsonwebtoken';
 
-import User, { UserToken } from '../../models/User';
-import AppError from '../../errors/AppError';
+import User, { UserToken } from '../infra/typeorm/entities/User';
+import AppError from '../../../shared/errors/AppError';
 
 class VerifyUserSessionService {
   userRepository: Repository<User>;
