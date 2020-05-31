@@ -7,13 +7,13 @@
   "database": "gostack_gobarber",
   "logging": true,
   "entities": [
-    "./src/models/*.ts"
+    "./src/modules/**/infra/typeorm/entities/*.ts"
   ],
   "migrations": [
-    "./src/database/migrations/*.ts"
+    "./src/shared/infra/typeorm/database/migrations/*.ts"
   ],
   "cli": {
-    "entitiesDir": "./src/database/models/",
-    "migrationsDir": "./src/database/migrations/"
+    "entitiesDir": "./src/modules/**/infra/typeorm/entities/",
+    "migrationsDir": "./src/shared/infra/typeorm/database/migrations/"
   }
 }
