@@ -1,6 +1,5 @@
 import { injectable, inject } from 'tsyringe';
 import { startOfHour } from 'date-fns';
-import { getCustomRepository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
 
@@ -28,9 +27,8 @@ class CreateAppointmentService {
     }
 
     const appointment = this.repository.create({ providerID, date: appointmentDate });
-    const newAppointment = await this.repository.save(appointment);
 
-    return newAppointment;
+    return appointment;
   }
 }
 

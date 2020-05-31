@@ -8,4 +8,4 @@ import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepo
 
 // Repositories
 container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepository);
-container.registerSingleton<IAppointmentsRepository>('AppointmentRepository', AppointmentsRepository);
+container.registerSingleton<IAppointmentsRepository>('AppointmentsRepository', AppointmentsRepository);
