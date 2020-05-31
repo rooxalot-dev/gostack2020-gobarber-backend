@@ -1,14 +1,14 @@
-import './config';
+import '@config/index';
 
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import 'express-async-errors';
 
-import './database';
-import routes from './routes';
-import uploadOptions from './config/upload';
+import '@shared/infra/typeorm';
+import uploadOptions from '@config/upload';
+import AppError from '@shared/errors/AppError';
 
-import AppError from './errors/AppError';
+import routes from './routes';
 
 const app = express();
 

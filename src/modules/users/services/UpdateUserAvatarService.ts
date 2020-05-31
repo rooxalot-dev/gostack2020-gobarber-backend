@@ -2,10 +2,10 @@ import { Repository, getRepository } from 'typeorm';
 import { join } from 'path';
 import fs from 'fs';
 
-import uploadOptions from '../../../config/upload';
-import User from '../infra/typeorm/entities/User';
-import AppError from '../../../shared/errors/AppError';
+import uploadOptions from '@config/upload';
+import AppError from '@shared/errors/AppError';
 
+import User from '../infra/typeorm/entities/User';
 
 interface UpdateUserAvatarRequest {
   userID: string;

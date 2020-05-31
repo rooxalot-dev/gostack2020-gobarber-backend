@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
-import VerifyUserSessionService from '../../../modules/users/services/VerifyUserSessionService';
-import { UserToken } from '../../../modules/users/infra/typeorm/entities/User';
+import VerifyUserSessionService from '@modules/users/services/VerifyUserSessionService';
+import { UserToken } from '@modules/users/dtos/UserToken';
 
 const authenticationMiddleware = async (
   request: Request,

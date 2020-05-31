@@ -2,8 +2,8 @@ import { Router, Request, Response } from 'express';
 import { getCustomRepository } from 'typeorm';
 import { parseISO } from 'date-fns';
 
-import CreateAppointmentService from '../services/Appointments/CreateAppointmentService';
-import AppointmentsRepository from '../repositories/AppointmentsRepository';
+import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentService';
+import AppointmentsRepository from '@modules/appointments/repositories/AppointmentsRepository';
 
 const appointmentRouter = Router();
 
