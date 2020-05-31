@@ -1,11 +1,11 @@
-import { Repository, getRepository } from 'typeorm';
+import { injectable, inject } from 'tsyringe';
 import { sign } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
 
 import AppError from '@shared/errors/AppError';
+import IUsersRepository from '../repositories/IUsersRepository';
 
 import { UserToken } from '../dtos/UserToken';
-import User from '../infra/typeorm/entities/User';
 
 interface AuthenticateUserRequest {
   email: string;
@@ -17,19 +17,16 @@ interface UserSessionResponse {
   user: UserToken;
 }
 
+@injectable()
 class AuthenticateUserService {
-  private repository: Repository<User>;
+  constructor(@inject('UsersRepository') private repository: IUsersRepository) {
 
-  constructor() {
-    this.repository = getRepository(User);
   }
 
   public async execute({ email, password }: AuthenticateUserRequest): Promise<UserSessionResponse> {
     const { APP_KEY } = process.env;
 
-    const user = await this.repository.findOne({
-      where: { email },
-    });
+    const user = await this.repository.findByEmail(email);
     if (!user) {
       throw new AppError('User not found!', 401);
     }

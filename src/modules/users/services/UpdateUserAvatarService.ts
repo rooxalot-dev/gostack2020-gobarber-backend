@@ -1,10 +1,11 @@
-import { Repository, getRepository } from 'typeorm';
+import { injectable, inject } from 'tsyringe';
 import { join } from 'path';
 import fs from 'fs';
 
 import uploadOptions from '@config/upload';
 import AppError from '@shared/errors/AppError';
 
+import IUsersRepository from '../repositories/IUsersRepository';
 import User from '../infra/typeorm/entities/User';
 
 interface UpdateUserAvatarRequest {
@@ -12,41 +13,34 @@ interface UpdateUserAvatarRequest {
   avatarPath: string;
  }
 
+ @injectable()
 class UpdateUserAvatarService {
-  private repository: Repository<User>;
+   constructor(@inject('UsersRepository') private repository: IUsersRepository) {}
 
-  constructor() {
-    this.repository = getRepository(User);
-  }
+   public async execute({ userID, avatarPath }: UpdateUserAvatarRequest): Promise<User> {
+     const user = await this.repository.findById(userID);
 
-  public async execute({ userID, avatarPath }: UpdateUserAvatarRequest): Promise<User> {
-    const user = await this.repository.findOne(userID);
+     if (!user) {
+       throw new AppError('User not found!');
+     }
 
-    if (!user) {
-      throw new AppError('User not found!');
-    }
+     if (user.avatar) {
+       const previousUserAvatarFile = join(uploadOptions.tempDirectory, user.avatar);
+       try {
+         const fileStats = await fs.promises.stat(previousUserAvatarFile);
+         if (fileStats) {
+           await fs.promises.unlink(previousUserAvatarFile);
+         }
+       } catch { const bypass = true; }
+     }
 
-    if (user.avatar) {
-      const previousUserAvatarFile = join(uploadOptions.tempDirectory, user.avatar);
-      try {
-        const fileStats = await fs.promises.stat(previousUserAvatarFile);
-        if (fileStats) {
-          await fs.promises.unlink(previousUserAvatarFile);
-        }
-      } catch { const bypass = true; }
-    }
+     user.avatar = avatarPath;
 
-    delete user.passwordHash;
-    user.avatar = avatarPath;
+     await this.repository.save(user);
 
-    const { affected } = await this.repository.update(userID, { avatar: avatarPath });
-
-    if (affected === 0) {
-      throw new AppError("User's avatar has not been updated");
-    }
-
-    return user;
-  }
-}
+     delete user.passwordHash;
+     return user;
+   }
+ }
 
 export default UpdateUserAvatarService;

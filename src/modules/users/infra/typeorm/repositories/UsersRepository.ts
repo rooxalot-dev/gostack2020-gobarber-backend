@@ -1,7 +1,7 @@
 import { EntityRepository, Repository, getRepository } from 'typeorm';
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
-import CreateUserDTO from '@modules/users/dtos/CreateUser';
+import CreateUserDTO from '@modules/users/dtos/CreateUserDTO';
 import User from '../entities/User';
 
 class UsersRepository implements IUsersRepository {
@@ -32,6 +32,11 @@ class UsersRepository implements IUsersRepository {
     });
 
     const user = this.ormRepository.save(createdUser);
+    return user;
+  }
+
+  save(data: User): Promise<User> {
+    const user = this.ormRepository.save(data);
     return user;
   }
 }

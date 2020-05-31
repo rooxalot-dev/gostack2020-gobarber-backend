@@ -19,6 +19,8 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "no-useless-constructor": "off",
+    "no-empty-function": "off",
     "no-unused-vars": "off",
     "class-methods-use-this": "off",
     "camelcase": "off",
