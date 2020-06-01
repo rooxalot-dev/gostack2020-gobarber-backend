@@ -22,7 +22,7 @@ class CreateAppointmentService {
     const appointmentDate = startOfHour(date);
     const hasAppointmentInSameDate = await this.repository.findByProviderAndDate({ providerID, date: appointmentDate });
 
-    if (hasAppointmentInSameDate !== null) {
+    if (hasAppointmentInSameDate) {
       throw new AppError("You can't create two appointments for the same provider in the same date!");
     }
 
