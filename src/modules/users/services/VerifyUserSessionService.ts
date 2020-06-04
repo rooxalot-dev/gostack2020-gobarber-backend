@@ -1,15 +1,16 @@
 import { injectable, inject } from 'tsyringe';
-import { verify } from 'jsonwebtoken';
 
 import AppError from '@shared/errors/AppError';
 
 import IUsersRepository from '../repositories/IUsersRepository';
+import ITokenProvider from '../providers/token/ITokenProvider';
 import { UserToken } from '../dtos/UserToken';
 
 @injectable()
 class VerifyUserSessionService {
   constructor(
     @inject('UsersRepository') private userRepository: IUsersRepository,
+    @inject('TokenProvider') private tokenProvider: ITokenProvider,
   ) {}
 
   public async execute(token: string | undefined) {
@@ -19,7 +20,7 @@ class VerifyUserSessionService {
       throw new AppError('Token not informed!', 401);
     }
 
-    const userToken: UserToken = <UserToken>verify(token, APP_KEY || '');
+    const userToken = this.tokenProvider.verify<UserToken>(token, APP_KEY || '');
 
     if (!userToken) {
       throw new AppError('Invalid token informed!', 401);
