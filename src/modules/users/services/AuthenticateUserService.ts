@@ -1,10 +1,9 @@
 import { injectable, inject } from 'tsyringe';
-import { sign } from 'jsonwebtoken';
-import { compare } from 'bcrypt';
 
 import AppError from '@shared/errors/AppError';
+import IHashProvider from '@shared/providers/crypto/IHashProvider';
+import ITokenProvider from '../providers/token/ITokenProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
-
 import { UserToken } from '../dtos/UserToken';
 
 interface AuthenticateUserRequest {
@@ -19,9 +18,11 @@ interface UserSessionResponse {
 
 @injectable()
 class AuthenticateUserService {
-  constructor(@inject('UsersRepository') private repository: IUsersRepository) {
-
-  }
+  constructor(
+    @inject('UsersRepository') private repository: IUsersRepository,
+    @inject('HashProvider') private hashProvider: IHashProvider,
+    @inject('TokenProvider') private tokenProvider: ITokenProvider,
+  ) { }
 
   public async execute({ email, password }: AuthenticateUserRequest): Promise<UserSessionResponse> {
     const { APP_KEY } = process.env;
@@ -31,7 +32,7 @@ class AuthenticateUserService {
       throw new AppError('User not found!', 401);
     }
 
-    const passwordsMatch = await compare(password, user.passwordHash);
+    const passwordsMatch = await this.hashProvider.compareHash(password, user.passwordHash);
     if (!passwordsMatch) {
       throw new AppError("User's password is wrong!", 401);
     }
@@ -42,7 +43,7 @@ class AuthenticateUserService {
       email: user.email,
     };
 
-    const jwt = sign(userToken, APP_KEY || '', {
+    const jwt = this.tokenProvider.sign(userToken, String(APP_KEY), {
       subject: user.id,
       expiresIn: '1d',
     });
