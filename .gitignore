@@ -4,5 +4,8 @@ dist/
 
 coverage/
 coverage_reports/
+
 tmp/*
 !tmp/.gitkeep
+storage/*
+!storage/.gitkeep

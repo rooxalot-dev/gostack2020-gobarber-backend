@@ -6,12 +6,14 @@ import AppointmentsRepository from '@modules/appointments/infra/typeorm/reposito
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 
-
 import IHashProvider from '@shared/providers/crypto/IHashProvider';
 import BCryptHashProvider from '@shared/providers/crypto/implementations/bcrypt/BCryptHashProvider';
 
 import ITokenProvider from '@modules/users/providers/token/ITokenProvider';
 import JWTTokenProvider from '@modules/users/providers/token/implementations/JWTTokenProvider';
+
+import IStorageProvider from '@shared/providers/storage/IStorageProvider';
+import LocalStorageProvider from '@shared/providers/storage/implementations/LocalStorageProvider';
 
 
 // Repositories
@@ -21,3 +23,4 @@ container.registerSingleton<IAppointmentsRepository>('AppointmentsRepository', A
 // Providers
 container.registerSingleton<IHashProvider>('HashProvider', BCryptHashProvider);
 container.registerSingleton<ITokenProvider>('TokenProvider', JWTTokenProvider);
+container.registerSingleton<IStorageProvider>('StorageProvider', LocalStorageProvider);

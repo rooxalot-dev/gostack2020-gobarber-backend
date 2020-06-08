@@ -43,8 +43,8 @@ describe('AuthenticateUser', () => {
       .toThrowError(AppError);
   });
 
-  it('should note authenticate when receives a wrong password', async () => {
-    const createdUser = await fakeUsersRepository.create({
+  it('should not authenticate with a wrong password', async () => {
+    await fakeUsersRepository.create({
       name: 'Teste',
       email: 'teste@teste.com.br',
       passwordHash: '123456',

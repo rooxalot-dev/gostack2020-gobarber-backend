@@ -1,10 +1,8 @@
 import { injectable, inject } from 'tsyringe';
-import { join } from 'path';
-import fs from 'fs';
 
-import uploadOptions from '@config/upload';
 import AppError from '@shared/errors/AppError';
 
+import IStorageProvider from '@shared/providers/storage/IStorageProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
 import User from '../infra/typeorm/entities/User';
 
@@ -15,7 +13,10 @@ interface UpdateUserAvatarRequest {
 
  @injectable()
 class UpdateUserAvatarService {
-   constructor(@inject('UsersRepository') private repository: IUsersRepository) {}
+   constructor(
+     @inject('UsersRepository') private repository: IUsersRepository,
+     @inject('StorageProvider') private storageProvider: IStorageProvider,
+   ) {}
 
    public async execute({ userID, avatarPath }: UpdateUserAvatarRequest): Promise<User> {
      const user = await this.repository.findById(userID);
@@ -25,13 +26,8 @@ class UpdateUserAvatarService {
      }
 
      if (user.avatar) {
-       const previousUserAvatarFile = join(uploadOptions.tempDirectory, user.avatar);
-       try {
-         const fileStats = await fs.promises.stat(previousUserAvatarFile);
-         if (fileStats) {
-           await fs.promises.unlink(previousUserAvatarFile);
-         }
-       } catch { const bypass = true; }
+       await this.storageProvider.remove(user.avatar);
+       await this.storageProvider.store(avatarPath);
      }
 
      user.avatar = avatarPath;
