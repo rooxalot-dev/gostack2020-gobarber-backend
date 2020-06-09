@@ -4,7 +4,7 @@ import AppError from '@shared/errors/AppError';
 
 import IUsersRepository from '../repositories/IUsersRepository';
 import ITokenProvider from '../providers/token/ITokenProvider';
-import { UserToken } from '../dtos/UserToken';
+import { UserLoginToken } from '../dtos/UserLoginToken';
 
 @injectable()
 class VerifyUserSessionService {
@@ -20,7 +20,7 @@ class VerifyUserSessionService {
       throw new AppError('Token not informed!', 401);
     }
 
-    const userToken = this.tokenProvider.verify<UserToken>(token, APP_KEY || '');
+    const userToken = this.tokenProvider.verify<UserLoginToken>(token, APP_KEY || '');
 
     if (!userToken) {
       throw new AppError('Invalid token informed!', 401);
