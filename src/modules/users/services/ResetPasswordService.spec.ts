@@ -16,7 +16,9 @@ describe('SendPasswordRecoveryEmail', () => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeUserTokensRepository = new FakeUserTokensRepository();
     fakeHashProvider = new FakeHashProvider();
-    resetPasswordService = new ResetPasswordService(fakeUsersRepository, fakeUserTokensRepository, fakeHashProvider);
+    resetPasswordService = new ResetPasswordService(
+      fakeUsersRepository, fakeUserTokensRepository, fakeHashProvider,
+    );
   });
 
   it('should reset the user\'s password', async () => {
