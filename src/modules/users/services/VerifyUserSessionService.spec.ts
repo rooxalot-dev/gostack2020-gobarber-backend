@@ -48,7 +48,7 @@ describe('VerifyUserSession', () => {
   });
 
   it('should throw a error when a alredy authenticated user is not found', async () => {
-    // Persiste um usuário em uma lista falsa de tokens autenticados, porém os usuário não está persistido
+    // Persiste um usuário em uma lista falsa de tokens autenticados, porém o usuário não está persistido
     const userToken: UserLoginToken = { id: '1', name: 'Teste', email: 'teste@teste.com.br' };
     const stringPayload = JSON.stringify(userToken);
     const token = Buffer.from(stringPayload).toString('base64');
