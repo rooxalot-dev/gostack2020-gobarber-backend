@@ -12,6 +12,7 @@ export default class FakeUserTokensRepository implements IUserTokensRepository {
       id: uuid(),
       userID,
       token: uuid(),
+      consumed: false,
     });
 
     this.tokens.push(userToken);
@@ -23,5 +24,13 @@ export default class FakeUserTokensRepository implements IUserTokensRepository {
     const userToken = this.tokens.find((t) => t.token === token);
 
     return userToken;
+  }
+
+  public async consumeToken(token: string): Promise<void> {
+    const tokenIndex = this.tokens.findIndex((t) => t.token === token);
+
+    if (tokenIndex >= 0) {
+      this.tokens[tokenIndex].consumed = true;
+    }
   }
 }

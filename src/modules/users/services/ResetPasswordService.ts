@@ -32,6 +32,10 @@ export default class ResetPasswordService {
       throw new AppError('The token is alredy expired!');
     }
 
+    if (userToken.consumed) {
+      throw new AppError('This token has alredy been consumed!');
+    }
+
     const user = await this.usersRepository.findById(userToken.userID);
 
     if (!user) {
@@ -42,5 +46,6 @@ export default class ResetPasswordService {
     user.passwordHash = newHashPassword;
 
     await this.usersRepository.save(user);
+    await this.userTokensRepository.consumeToken(token);
   }
 }

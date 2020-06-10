@@ -10,8 +10,10 @@ class UserToken {
   id: string;
 
   @Column()
-  @PrimaryGeneratedColumn('uuid')
   token: string;
+
+  @Column({ type: 'bool' })
+  consumed: boolean;
 
   @Column({ name: 'user_id' })
   userID: string;

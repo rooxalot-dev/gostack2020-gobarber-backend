@@ -14,6 +14,6 @@
   ],
   "cli": {
     "entitiesDir": "./src/modules/**/infra/typeorm/entities/",
-    "migrationsDir": "./src/shared/infra/typeorm/database/migrations/"
+    "migrationsDir": "./src/shared/infra/typeorm/migrations/"
   }
 }

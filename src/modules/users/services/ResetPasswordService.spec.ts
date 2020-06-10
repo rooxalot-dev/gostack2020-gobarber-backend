@@ -52,6 +52,19 @@ describe('SendPasswordRecoveryEmail', () => {
     await expect(resetPasswordService.execute({ token, newPassword: '123123' })).rejects.toThrowError(AppError);
   });
 
+  it('should not reset the user\'s password when the token has alredy been consumed', async () => {
+    const createdUser = await fakeUsersRepository.create({
+      name: 'Teste',
+      email: 'teste@teste.com.br',
+      passwordHash: '123456',
+    });
+
+    const { token } = await fakeUserTokensRepository.generate(createdUser.id);
+    await fakeUserTokensRepository.consumeToken(token);
+
+    await expect(resetPasswordService.execute({ token, newPassword: '123123' })).rejects.toThrowError(AppError);
+  });
+
   it('should throw a error when the informed token does not exist', async () => {
     await expect(resetPasswordService.execute({ token: 'unknown-token', newPassword: '123123' })).rejects.toThrowError(AppError);
   });

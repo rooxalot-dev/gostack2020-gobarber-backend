@@ -29,4 +29,12 @@ export default class UserTokensRepository implements IUserTokensRepository {
 
     return userToken;
   }
+
+  async consumeToken(token: string): Promise<void> {
+    await this.ormRepository.update({
+      token,
+    }, {
+      consumed: true,
+    });
+  }
 }
