@@ -1,3 +1,5 @@
+import fs from 'fs';
+import { resolve } from 'path';
 import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
@@ -26,11 +28,15 @@ export default class SendPasswordRecoveryEmailService {
 
     const userToken = await this.userTokensRepository.generate(existingUser.id);
 
+    const forgotPasswordTemplatePath = resolve(__dirname, '..', 'templates', 'forgot_user_password.hbs');
+    const forgotPasswordTemplate = await fs.promises.readFile(forgotPasswordTemplatePath, { encoding: 'utf-8' });
+
+
     const isMailSend = await this.mailProvider.sendMailTemplate({
       to: [{ name: existingUser.name, email: existingUser.email }],
       subject: 'GoBarber - Recuperação de Senha',
       template: {
-        template: 'Olá {{name}}! Esse é seu token de recuperação de senha: {{token}}',
+        template: forgotPasswordTemplate,
         variables: {
           name: existingUser.name,
           token: userToken.token,
