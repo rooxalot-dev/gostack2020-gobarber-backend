@@ -18,7 +18,7 @@ describe('SendPasswordRecoveryEmail', () => {
   });
 
   it('should send a recovery password email to a registered user', async () => {
-    const sendMail = jest.spyOn(fakeMailProvider, 'sendMail');
+    const sendMailTemplate = jest.spyOn(fakeMailProvider, 'sendMailTemplate');
     const createdUser = await fakeUsersRepository.create({
       name: 'Teste',
       email: 'teste@teste.com.br',
@@ -27,7 +27,7 @@ describe('SendPasswordRecoveryEmail', () => {
 
     const response = await sendPasswordRecoveryEmailService.execute({ email: createdUser.email });
 
-    expect(sendMail).toHaveBeenCalled();
+    expect(sendMailTemplate).toHaveBeenCalled();
     expect(response).toBe(true);
   });
 

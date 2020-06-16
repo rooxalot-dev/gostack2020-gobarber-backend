@@ -21,6 +21,9 @@ import LocalStorageProvider from '@shared/providers/storage/implementations/Loca
 import IMailProvider from '@shared/providers/mail/IMailProvider';
 import EtherealMailProvider from '@shared/providers/mail/implementations/EtherealMailProvider';
 
+import MailTemplateProvider from '@shared/providers/mailTemplate/IMailTemplateProvider';
+import HandlebarsMailTemplateProvider from '@shared/providers/mailTemplate/implementations/HandlebarsMailTemplateProvider';
+
 
 // Repositories
 container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepository);
@@ -31,4 +34,5 @@ container.registerSingleton<IAppointmentsRepository>('AppointmentsRepository', A
 container.registerSingleton<IHashProvider>('HashProvider', BCryptHashProvider);
 container.registerSingleton<ITokenProvider>('TokenProvider', JWTTokenProvider);
 container.registerSingleton<IStorageProvider>('StorageProvider', LocalStorageProvider);
-container.registerInstance<IMailProvider>('MailProvider', new EtherealMailProvider()); // DEV
+container.registerSingleton<MailTemplateProvider>('MailTemplateProvider', HandlebarsMailTemplateProvider);
+container.registerInstance<IMailProvider>('MailProvider', container.resolve(EtherealMailProvider)); // DEV

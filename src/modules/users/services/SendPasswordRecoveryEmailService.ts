@@ -26,10 +26,16 @@ export default class SendPasswordRecoveryEmailService {
 
     const userToken = await this.userTokensRepository.generate(existingUser.id);
 
-    const isMailSend = await this.mailProvider.sendMail({
-      to: [email],
+    const isMailSend = await this.mailProvider.sendMailTemplate({
+      to: [{ name: existingUser.name, email: existingUser.email }],
       subject: 'GoBarber - Recuperação de Senha',
-      body: `E-mail de recuperação de senha: ${userToken.token}`,
+      template: {
+        template: 'Olá {{name}}! Esse é seu token de recuperação de senha: {{token}}',
+        variables: {
+          name: existingUser.name,
+          token: userToken.token,
+        },
+      },
     });
 
     return isMailSend;

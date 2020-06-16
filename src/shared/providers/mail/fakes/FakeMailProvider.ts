@@ -1,10 +1,24 @@
-import IMailProvider, { SendMailRequest } from '../IMailProvider';
+import IMailProvider, { SendMailDTO, SendMailTemplateDTO } from '../IMailProvider';
 
 export default class FakeMailProvider implements IMailProvider {
-  private inbox: SendMailRequest[] = [];
+  private inbox: SendMailDTO[] = [];
 
-  async sendMail({ to, subject, body }: SendMailRequest): Promise<boolean> {
-    this.inbox.push({ to, subject, body });
+  async sendMail({
+    from, to, subject, body,
+  }: SendMailDTO): Promise<boolean> {
+    this.inbox.push({
+      from, to, subject, body,
+    });
+
+    return true;
+  }
+
+  async sendMailTemplate({
+    from, to, subject, template,
+  }: SendMailTemplateDTO): Promise<boolean> {
+    this.inbox.push({
+      from, to, subject, body: template.template,
+    });
 
     return true;
   }
