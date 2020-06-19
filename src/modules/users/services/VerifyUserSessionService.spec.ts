@@ -4,7 +4,7 @@ import AppError from '@shared/errors/AppError';
 import VerifyUserSessionService from './VerifyUserSessionService';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 import FakeTokenProvider from '../providers/token/fakes/FakeTokenProvider';
-import { UserToken } from '../dtos/UserToken';
+import { UserLoginToken } from '../dtos/UserLoginToken';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeTokenProvider: FakeTokenProvider;
@@ -26,7 +26,7 @@ describe('VerifyUserSession', () => {
     });
 
     // Persiste um usuário em uma lista falsa de tokens autenticados
-    const userToken: UserToken = { id: '1', name: 'Teste', email: 'teste@teste.com.br' };
+    const userToken: UserLoginToken = { id: '1', name: 'Teste', email: 'teste@teste.com.br' };
     const stringPayload = JSON.stringify(userToken);
     const token = Buffer.from(stringPayload).toString('base64');
     fakeTokenProvider.tokens.push({ token, payload: userToken });
@@ -48,8 +48,8 @@ describe('VerifyUserSession', () => {
   });
 
   it('should throw a error when a alredy authenticated user is not found', async () => {
-    // Persiste um usuário em uma lista falsa de tokens autenticados, porém os usuário não está persistido
-    const userToken: UserToken = { id: '1', name: 'Teste', email: 'teste@teste.com.br' };
+    // Persiste um usuário em uma lista falsa de tokens autenticados, porém o usuário não está persistido
+    const userToken: UserLoginToken = { id: '1', name: 'Teste', email: 'teste@teste.com.br' };
     const stringPayload = JSON.stringify(userToken);
     const token = Buffer.from(stringPayload).toString('base64');
     fakeTokenProvider.tokens.push({ token, payload: userToken });

@@ -4,7 +4,7 @@ import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/providers/crypto/IHashProvider';
 import ITokenProvider from '../providers/token/ITokenProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
-import { UserToken } from '../dtos/UserToken';
+import { UserLoginToken } from '../dtos/UserLoginToken';
 
 interface AuthenticateUserRequest {
   email: string;
@@ -13,7 +13,7 @@ interface AuthenticateUserRequest {
 
 interface UserSessionResponse {
   token: string;
-  user: UserToken;
+  user: UserLoginToken;
 }
 
 @injectable()
@@ -37,7 +37,7 @@ class AuthenticateUserService {
       throw new AppError("User's password is wrong!", 401);
     }
 
-    const userToken: UserToken = {
+    const userToken: UserLoginToken = {
       id: user.id,
       name: user.name,
       email: user.email,

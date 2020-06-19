@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
 
 import VerifyUserSessionService from '@modules/users/services/VerifyUserSessionService';
-import { UserToken } from '@modules/users/dtos/UserToken';
+import { UserLoginToken } from '@modules/users/dtos/UserLoginToken';
 
 
 const authenticationMiddleware = async (
@@ -17,7 +17,7 @@ const authenticationMiddleware = async (
   const verifyUserSessionService = container.resolve(VerifyUserSessionService);
   const validToken = await verifyUserSessionService.execute(userToken);
 
-  request.user = validToken as UserToken;
+  request.user = validToken as UserLoginToken;
 
   return next();
 };
