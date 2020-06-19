@@ -61,7 +61,7 @@ describe('UpdateUserInfo', () => {
   });
 
   it('should not be able to update a non-existing user', async () => {
-    expect(
+    await expect(
       updateUserInfoService.execute({
         id: 'non-existing-user-id',
         oldPassword: 'wrong-password',
@@ -105,7 +105,7 @@ describe('UpdateUserInfo', () => {
       passwordHash: '123456',
     });
 
-    expect(
+    await expect(
       updateUserInfoService.execute({
         id: createdUser.id,
         name: 'Teste2',
@@ -123,7 +123,7 @@ describe('UpdateUserInfo', () => {
       passwordHash: '123456',
     });
 
-    expect(
+    await expect(
       updateUserInfoService.execute({
         id: createdUser.id,
         oldPassword: 'wrong-password',
@@ -142,7 +142,7 @@ describe('UpdateUserInfo', () => {
       passwordHash: '123456',
     });
 
-    expect(
+    await expect(
       updateUserInfoService.execute({
         id: createdUser.id,
         oldPassword: createdUser.passwordHash,
