@@ -33,6 +33,11 @@ export default class UpdateUserInfoService {
       throw new AppError('The user does not exist!');
     }
 
+    const userExistingEmail = await this.usersRepository.findByEmail(email);
+    if (!!userExistingEmail && userExistingEmail.id !== id) {
+      throw new AppError('The informed email alredy exists. Try a different one!');
+    }
+
     // Validações para troca de senha do usuário
     let isValidPasswordUpdate = false;
 

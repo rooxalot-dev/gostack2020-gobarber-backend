@@ -73,6 +73,31 @@ describe('UpdateUserInfo', () => {
     ).rejects.toThrowError(AppError);
   });
 
+  it('should not be able to update the user\'s e-mail to an alredy existing one', async () => {
+    const createdUser = await fakeUsersRepository.create({
+      name: 'Teste',
+      email: 'teste@teste.com.br',
+      passwordHash: '123456',
+    });
+
+    await fakeUsersRepository.create({
+      name: 'Teste2',
+      email: 'teste2@teste.com.br',
+      passwordHash: '123456',
+    });
+
+    await expect(
+      updateUserInfoService.execute({
+        id: createdUser.id,
+        oldPassword: createdUser.passwordHash,
+        name: 'Teste2',
+        email: 'teste2@teste.com.br',
+        password: '654321',
+        confirmPassword: '654321',
+      }),
+    ).rejects.toThrowError(AppError);
+  });
+
   it('should not be able to update the user\'s password if the old password is not informed', async () => {
     const createdUser = await fakeUsersRepository.create({
       name: 'Teste',
