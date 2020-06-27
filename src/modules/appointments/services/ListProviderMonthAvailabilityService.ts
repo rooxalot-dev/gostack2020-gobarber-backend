@@ -33,9 +33,9 @@ export default class ListProviderMonthAvailabilityService {
     const monthAvailability = arrayMonthDays
       .map((monthDay) => monthDay + 1)
       .map((monthDay) => {
-        const existingAppointment = monthAppointments.find((appointment) => appointment.date.getDate() === monthDay);
+        const existingAppointments = monthAppointments.filter((appointment) => appointment.date.getDate() === monthDay);
 
-        return { day: monthDay, available: !existingAppointment };
+        return { day: monthDay, available: existingAppointments.length < 10 };
       });
 
     return monthAvailability;

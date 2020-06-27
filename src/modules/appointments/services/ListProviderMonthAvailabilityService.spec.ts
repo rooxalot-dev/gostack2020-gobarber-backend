@@ -29,14 +29,16 @@ describe('ListProviderMonthAvailability', () => {
 
     const monthToTest = 5; // Maio no objeto Date do Javascript, pois inicia com indice 0;
 
-    const arrayTenDays = Array.from(Array(10).keys());
+    const arrayTenAppointments = Array.from(Array(10).keys());
 
-    const createApponintmentsPromiseArray = arrayTenDays.map((day) => (
-      fakeAppointmentsRepository.create({
-        providerID: createdProvider.id,
-        date: new Date(2020, monthToTest, day + 1),
-      })
-    ));
+    const createApponintmentsPromiseArray = arrayTenAppointments
+      .map((appointmentHour) => appointmentHour + 8) // Agendamentos se iniciam as 8h
+      .map((appointmentHour) => (
+        fakeAppointmentsRepository.create({
+          providerID: createdProvider.id,
+          date: new Date(2020, monthToTest, 1, appointmentHour, 0, 0),
+        })
+      ));
 
     // Aguarda a criação de todos os agendamentos
     await Promise.all(createApponintmentsPromiseArray);
@@ -47,10 +49,12 @@ describe('ListProviderMonthAvailability', () => {
       month: monthToTest + 1,
     });
 
+    console.log('availableDays', availableDays);
+
     expect(availableDays).toStrictEqual(
       expect.arrayContaining([
         expect.objectContaining({ day: 1, available: false }),
-        expect.objectContaining({ day: 11, available: true }),
+        expect.objectContaining({ day: 2, available: true }),
       ]),
     );
   });
