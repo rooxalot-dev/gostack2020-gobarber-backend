@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, getRepository } from 'typeorm';
+import { Repository, getRepository, Not } from 'typeorm';
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import CreateUserDTO from '@modules/users/dtos/CreateUserDTO';
@@ -24,11 +24,34 @@ class UsersRepository implements IUsersRepository {
     return user;
   }
 
+  async listAllProviders(exceptUserId?: string | undefined): Promise<User[]> {
+    let providers: User[];
+
+    if (exceptUserId) {
+      providers = await this.ormRepository.find({
+        where: {
+          id: Not(exceptUserId),
+          isProvider: true,
+        },
+      });
+    } else {
+      providers = await this.ormRepository.find({
+        where: { isProvider: true },
+      });
+    }
+
+    providers.forEach((p) => delete p.passwordHash);
+
+    return providers;
+  }
+
   create(data: CreateUserDTO): Promise<User> {
-    const { name, email, passwordHash } = data;
+    const {
+      name, email, passwordHash, isProvider,
+    } = data;
 
     const createdUser = this.ormRepository.create({
-      name, email, passwordHash,
+      name, email, passwordHash, isProvider,
     });
 
     const user = this.ormRepository.save(createdUser);

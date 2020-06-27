@@ -9,6 +9,7 @@ interface CreateUserRequest {
   name: string;
   email: string;
   password: string;
+  isProvider?: boolean
 }
 
 @injectable()
@@ -19,7 +20,7 @@ class CreateUserService {
   ) { }
 
   public async execute({
-    name, email, password,
+    name, email, password, isProvider,
   }: CreateUserRequest): Promise<User> {
     const hasUserEmail = await this.repository.findByEmail(email);
 
@@ -32,6 +33,7 @@ class CreateUserService {
       name,
       email,
       passwordHash,
+      isProvider,
     });
 
     delete newUser.passwordHash;

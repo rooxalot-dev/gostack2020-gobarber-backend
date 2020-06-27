@@ -1,9 +1,10 @@
 import { uuid } from 'uuidv4';
 
+import FindMonthAppointmentsDTO from '@modules/appointments/dtos/FindMonthAppointmentsDTO';
 import IAppointmentsRepository from '../IAppointmentsRepository';
 import Appointment from '../../infra/typeorm/entities/Appointment';
 import CreateAppointmentDTO from '../../dtos/CreateAppointmentDTO';
-import FindAppountmentDTO from '../../dtos/FindAppountmentDTO';
+import FindAppountmentDTO from '../../dtos/FindAppointmentDTO';
 
 
 export default class FakeAppointmentsRepository implements IAppointmentsRepository {
@@ -32,6 +33,19 @@ export default class FakeAppointmentsRepository implements IAppointmentsReposito
 
     return new Promise<Appointment>((resolve, reject) => {
       resolve(appointment);
+    });
+  }
+
+  findMonthAppointments({ providerId, month, year }: FindMonthAppointmentsDTO): Promise<Appointment[]> {
+    // Mês recebido não vem no formato javascript (Índice 0)
+    month -= 1;
+
+    const appointmentsInMonth = this.appointments.filter((app) => app.providerID === providerId
+      && app.date.getMonth() === month
+      && app.date.getFullYear() === year);
+
+    return new Promise((resolve, reject) => {
+      resolve(appointmentsInMonth);
     });
   }
 }

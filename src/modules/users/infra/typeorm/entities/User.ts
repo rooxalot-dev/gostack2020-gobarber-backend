@@ -14,6 +14,9 @@ class User {
   @Column()
   email: string;
 
+  @Column({ name: 'is_provider' })
+  isProvider: boolean;
+
   @Column({ name: 'password_hash', type: 'varchar' })
   passwordHash: string;
 

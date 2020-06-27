@@ -24,9 +24,24 @@ export default class FakeUsersRepository implements IUsersRepository {
     });
   }
 
-  create({ name, email, passwordHash }: CreateUserDTO): Promise<User> {
+  listAllProviders(exceptUserId?: string): Promise<User[]> {
+    let usersList = this.users;
+
+    if (exceptUserId) {
+      usersList = this.users.filter((u) => u.id !== exceptUserId);
+    }
+
+    return new Promise((resolve, reject) => {
+      usersList = usersList.filter((u) => u.isProvider === true);
+      resolve(usersList);
+    });
+  }
+
+  create({
+    name, email, passwordHash, isProvider,
+  }: CreateUserDTO): Promise<User> {
     const user = Object.assign(new User(), {
-      id: uuid(), name, email, passwordHash,
+      id: uuid(), name, email, passwordHash, isProvider,
     });
 
     this.users.push(user);
