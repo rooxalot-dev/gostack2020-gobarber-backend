@@ -9,4 +9,4 @@ export default interface IAppointmentsRepository {
   findByProviderAndDate(data: FindAppointmentDTO): Promise<Appointment | undefined>;
   findMonthAppointments(data: FindMonthAppointmentsDTO): Promise<Appointment[]>;
   findDayAppointments(data: FindDayAppointmentsDTO): Promise<Appointment[]>;
-};
+}

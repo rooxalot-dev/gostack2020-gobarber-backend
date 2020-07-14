@@ -69,9 +69,9 @@ class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   create(data: CreateAppointmentDTO): Promise<Appointment> {
-    const { providerID, date } = data;
+    const { providerID, userID, date } = data;
 
-    const appointment = this.ormRepository.create({ providerID, date });
+    const appointment = this.ormRepository.create({ providerID, userID, date });
     const newAppointment = this.ormRepository.save(appointment);
 
     return newAppointment;

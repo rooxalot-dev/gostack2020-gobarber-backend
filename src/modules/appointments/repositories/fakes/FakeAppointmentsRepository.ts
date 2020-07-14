@@ -13,11 +13,12 @@ export default class FakeAppointmentsRepository implements IAppointmentsReposito
 
   private appointments: Appointment[] = [];
 
-  create({ date, providerID }: CreateAppointmentDTO): Promise<Appointment> {
+  create({ date, userID, providerID }: CreateAppointmentDTO): Promise<Appointment> {
     const appointment = new Appointment();
 
     appointment.id = uuid();
     appointment.date = date;
+    appointment.userID = userID;
     appointment.providerID = providerID;
     appointment.createdAt = new Date();
     appointment.updatedAt = new Date();
