@@ -20,7 +20,7 @@ beforeEach(() => {
 });
 
 describe('ListProviderDayAvailability', () => {
-  it('', async () => {
+  it('should be able to list all the available hours in the selected day', async () => {
     const createdProvider = await fakeUsersRepository.create({
       name: 'Teste',
       email: 'teste@teste.com.br',
@@ -30,6 +30,9 @@ describe('ListProviderDayAvailability', () => {
 
     const monthToTest = 5; // Maio no objeto Date do Javascript, pois inicia com indice 0;
     const dayToTest = 1;
+
+    // Força que o método Date.now() retorne o dia 2 do mês
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => new Date(2020, monthToTest, dayToTest).getTime());
 
     const arrayTenAppointments = Array.from(Array(8).keys());
 
@@ -66,6 +69,44 @@ describe('ListProviderDayAvailability', () => {
         expect.objectContaining({ hour: 14, available: false }),
         expect.objectContaining({ hour: 15, available: false }),
         expect.objectContaining({ hour: 16, available: true }),
+        expect.objectContaining({ hour: 17, available: true }),
+      ]),
+    );
+  });
+
+  it('should not be list as a available hour all the alredy passed hours', async () => {
+    const createdProvider = await fakeUsersRepository.create({
+      name: 'Teste',
+      email: 'teste@teste.com.br',
+      passwordHash: '123456',
+      isProvider: true,
+    });
+
+    const monthToTest = 5; // Maio no objeto Date do Javascript, pois inicia com indice 0;
+    const dayToTest = 1;
+
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => new Date(2020, monthToTest, dayToTest, 15, 0, 0, 0).getTime());
+
+    // Cria um agendamento as 16h
+    const appointmentHourDate = new Date(2020, monthToTest, dayToTest, 16, 0, 0);
+
+    await fakeAppointmentsRepository.create({
+      providerID: createdProvider.id,
+      date: appointmentHourDate,
+    });
+
+    const availableHours = await listProviderDayAvailabilityService.execute({
+      providerId: createdProvider.id,
+      year: 2020,
+      month: monthToTest + 1,
+      day: dayToTest,
+    });
+
+    // Deve haver somente os ultimo agendamento livre, poís o das 16 foi agendado agora e os demais são de horários passados
+    expect(availableHours).toStrictEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ hour: 8, available: false }),
+        expect.objectContaining({ hour: 16, available: false }),
         expect.objectContaining({ hour: 17, available: true }),
       ]),
     );

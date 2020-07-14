@@ -1,8 +1,9 @@
 import { inject, injectable } from 'tsyringe';
-import { getDaysInMonth } from 'date-fns';
+import { getDaysInMonth, isBefore } from 'date-fns';
+import { convertToTimeZone } from 'date-fns-timezone';
 
-import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
+import { getDateUTC } from '@shared/helpers/DateHelper';
 
 interface ListProviderMonthAvailabilityRequest {
   providerId: string;
@@ -26,16 +27,26 @@ export default class ListProviderMonthAvailabilityService {
     const monthAppointments = await this.appointmentsRepository.findMonthAppointments({
       providerId, year, month,
     });
-
+    const currentDate = new Date(Date.now());
     const monthDays = getDaysInMonth(month - 1); // Meses em javascript possuem índice 0;
     const arrayMonthDays = Array.from(Array(monthDays).keys());
 
     const monthAvailability = arrayMonthDays
       .map((monthDay) => monthDay + 1)
       .map((monthDay) => {
-        const existingAppointments = monthAppointments.filter((appointment) => appointment.date.getDate() === monthDay);
+        let availableDay = true;
+        const monthDayDate = convertToTimeZone(new Date(year, month - 1, monthDay), { timeZone: 'America/Sao_Paulo' });
 
-        return { day: monthDay, available: existingAppointments.length < 10 };
+        if (isBefore(monthDayDate, currentDate)) {
+          availableDay = false;
+        } else {
+          const existingAppointments = monthAppointments
+            .filter((appointment) => appointment.date.getDate() === monthDay);
+
+          availableDay = existingAppointments.length < 10;
+        }
+
+        return { day: monthDay, available: availableDay };
       });
 
     return monthAvailability;

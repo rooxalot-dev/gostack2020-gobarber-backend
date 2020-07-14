@@ -1,8 +1,9 @@
 import { inject, injectable } from 'tsyringe';
-import { getHours } from 'date-fns';
+import { getHours, isBefore } from 'date-fns';
 import { getDateUTC } from '@shared/helpers/DateHelper';
 
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
+import { convertToTimeZone } from 'date-fns-timezone';
 
 interface ListProviderDayAvailabilityRequest {
   providerId: string;
@@ -30,15 +31,25 @@ export default class ListProviderDayAvailabilityService {
       providerId, year, month, day,
     });
 
+    const currentDate = new Date(Date.now());
+
     const startHour = 8;
     const arrayHours = Array.from(Array(10).keys()); // 10 agendamentos ao dia
 
     const dayAvailability = arrayHours
       .map((hour) => hour + startHour)
       .map((hour) => {
-        const existingAppointment = dayAppointments.find((appointment) => getHours(getDateUTC(appointment.date)) === hour);
+        let availableHour = true;
+        const hourDate = convertToTimeZone(new Date(year, month - 1, day, hour, 0, 0, 0), { timeZone: 'America/Sao_Paulo' });
 
-        return { hour, available: !existingAppointment };
+        if (isBefore(hourDate, currentDate)) {
+          availableHour = false;
+        } else {
+          const existingAppointment = dayAppointments.find((appointment) => getHours(getDateUTC(appointment.date)) === hour);
+          availableHour = !existingAppointment;
+        }
+
+        return { hour, available: availableHour };
       });
 
     return dayAvailability;

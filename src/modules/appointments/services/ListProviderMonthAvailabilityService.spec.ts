@@ -19,7 +19,7 @@ beforeEach(() => {
 });
 
 describe('ListProviderMonthAvailability', () => {
-  it('', async () => {
+  it('should be able to list all the available day in the selected month', async () => {
     const createdProvider = await fakeUsersRepository.create({
       name: 'Teste',
       email: 'teste@teste.com.br',
@@ -28,6 +28,9 @@ describe('ListProviderMonthAvailability', () => {
     });
 
     const monthToTest = 5; // Maio no objeto Date do Javascript, pois inicia com indice 0;
+
+    // Força que o método Date.now() retorne o dia 2 do mês
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => new Date(2020, monthToTest, 2).getTime());
 
     const arrayTenAppointments = Array.from(Array(10).keys());
 
@@ -49,12 +52,41 @@ describe('ListProviderMonthAvailability', () => {
       month: monthToTest + 1,
     });
 
-    console.log('availableDays', availableDays);
-
     expect(availableDays).toStrictEqual(
       expect.arrayContaining([
         expect.objectContaining({ day: 1, available: false }),
         expect.objectContaining({ day: 2, available: true }),
+      ]),
+    );
+  });
+
+  it('should not be list as a available day all the alredy passed days', async () => {
+    const createdProvider = await fakeUsersRepository.create({
+      name: 'Teste',
+      email: 'teste@teste.com.br',
+      passwordHash: '123456',
+      isProvider: true,
+    });
+
+    const monthToTest = 5; // Maio no objeto Date do Javascript, pois inicia com indice 0;
+
+    // Força que o método Date.now() retorne o dia 2 do mês
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => new Date(2020, monthToTest, 2).getTime());
+
+    await fakeAppointmentsRepository.create({
+      providerID: createdProvider.id,
+      date: new Date(2020, monthToTest, 1, 12, 0, 0),
+    });
+
+    const availableDays = await listProviderMonthAvailabilityService.execute({
+      providerId: createdProvider.id,
+      year: 2020,
+      month: monthToTest + 1,
+    });
+
+    expect(availableDays).toStrictEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ day: 1, available: false }),
       ]),
     );
   });
