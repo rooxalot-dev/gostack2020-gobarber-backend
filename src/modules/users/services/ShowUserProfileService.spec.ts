@@ -23,7 +23,6 @@ describe('ShowUserProfile', () => {
     expect(userProfile).toBeDefined();
     expect(userProfile.name).toBe('Teste');
     expect(userProfile.email).toBe('teste@teste.com.br');
-    expect(userProfile.passwordHash).toBe('123456');
   });
 
   it('should not be able to show an non-existing user\'s profile', async () => {

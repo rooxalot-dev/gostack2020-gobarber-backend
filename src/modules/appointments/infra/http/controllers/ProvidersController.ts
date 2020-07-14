@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { parseISO } from 'date-fns';
 
 import ListProvidersService from '@modules/appointments/services/ListProvidersService';
 
