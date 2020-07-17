@@ -1,6 +1,9 @@
+import { Exclude, Expose } from 'class-transformer';
 import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
+
+const { APP_API_URL } = process.env;
 
 @Entity({ name: 'users' })
 class User {
@@ -18,10 +21,16 @@ class User {
   isProvider: boolean;
 
   @Column({ name: 'password_hash', type: 'varchar' })
+  @Exclude()
   passwordHash: string;
 
   @Column()
   avatar: string;
+
+  @Expose({ name: 'avatarUrl' })
+  getAvatarUrl(): string | null {
+    return this.avatar ? `${APP_API_URL}/files/${this.avatar}` : null;
+  }
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

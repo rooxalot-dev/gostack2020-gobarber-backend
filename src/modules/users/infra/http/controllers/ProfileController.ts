@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 
 import ShowUserProfileService from '@modules/users/services/ShowUserProfileService';
 import UpdateUserInfoService from '@modules/users/services/UpdateUserInfoService';
@@ -26,6 +27,8 @@ export default class ProfileController {
       id, name, email, oldPassword, password, confirmPassword,
     });
 
-    return response.status(200).json(newUser);
+    const transformedUser = classToClass(newUser);
+
+    return response.status(200).json(transformedUser);
   }
 }
