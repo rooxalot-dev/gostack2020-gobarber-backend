@@ -9,6 +9,9 @@ import UserTokensRepository from '@modules/users/infra/typeorm/repositories/User
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import AppointmentsRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
 
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
+import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
+
 import IHashProvider from '@shared/providers/crypto/IHashProvider';
 import BCryptHashProvider from '@shared/providers/crypto/implementations/bcrypt/BCryptHashProvider';
 
@@ -29,6 +32,7 @@ import HandlebarsMailTemplateProvider from '@shared/providers/mailTemplate/imple
 container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepository);
 container.registerSingleton<IUserTokensRepository>('UserTokensRepository', UserTokensRepository);
 container.registerSingleton<IAppointmentsRepository>('AppointmentsRepository', AppointmentsRepository);
+container.registerSingleton<INotificationsRepository>('NotificationsRepository', NotificationsRepository);
 
 // Providers
 container.registerSingleton<IHashProvider>('HashProvider', BCryptHashProvider);

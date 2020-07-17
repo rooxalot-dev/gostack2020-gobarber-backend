@@ -1,6 +1,6 @@
-import { Connection, createConnection } from 'typeorm';
+import { Connection, createConnections } from 'typeorm';
 
 // Pesquisa automaticamente por um arquivo chamado ormconfig
-const connection: Promise<Connection> = createConnection();
+const connections: Promise<Connection[]> = createConnections();
 
-export default connection;
+export default connections;

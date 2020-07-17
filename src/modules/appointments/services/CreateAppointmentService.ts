@@ -1,9 +1,10 @@
 import { injectable, inject } from 'tsyringe';
-import { startOfHour, isBefore } from 'date-fns';
+import { startOfHour, isBefore, format } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import Appointment from '../infra/typeorm/entities/Appointment';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
@@ -18,6 +19,7 @@ class CreateAppointmentService {
   constructor(
     @inject('AppointmentsRepository') private repository: IAppointmentsRepository,
     @inject('UsersRepository') private usersRepository: IUsersRepository,
+    @inject('NotificationsRepository') private notificationsRepository: INotificationsRepository,
   ) {}
 
   public async execute({ providerID, userID, date }: CreateAppointmentRequest): Promise<Appointment> {
@@ -43,6 +45,10 @@ class CreateAppointmentService {
     if (hasAppointmentInSameDate) {
       throw new AppError("You can't create two appointments for the same provider in the same date!");
     }
+
+    // Cria uma notificação no banco de dados para que seja posteriormente processada
+    const formattedDate = format(appointmentDate, "dd/MM/yyyy 'ás' HH:mm'h'");
+    await this.notificationsRepository.create({ recipientId: providerID, content: `Olá! Novo agendamento marcado dia ${formattedDate}` });
 
     const appointment = this.repository.create({ providerID, userID, date: appointmentDate });
 

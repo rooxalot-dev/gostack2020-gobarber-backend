@@ -1,10 +1,5 @@
-import { parseISO } from 'date-fns';
-
-import AppError from '@shared/errors/AppError';
-
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
-import { getDateUTC } from '@shared/helpers/DateHelper';
 import ListProviderDayAvailabilityService from './ListProviderDayAvailabilityService';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppointmentsRepository';
@@ -42,6 +37,7 @@ describe('ListProviderDayAvailability', () => {
         const appointmentHourDate = new Date(2020, monthToTest, 1, appointmentHour, 0, 0);
 
         return fakeAppointmentsRepository.create({
+          userID: 'user',
           providerID: createdProvider.id,
           date: appointmentHourDate,
         });
@@ -91,6 +87,7 @@ describe('ListProviderDayAvailability', () => {
     const appointmentHourDate = new Date(2020, monthToTest, dayToTest, 16, 0, 0);
 
     await fakeAppointmentsRepository.create({
+      userID: 'user',
       providerID: createdProvider.id,
       date: appointmentHourDate,
     });

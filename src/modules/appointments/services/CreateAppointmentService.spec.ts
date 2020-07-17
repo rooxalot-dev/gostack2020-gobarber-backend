@@ -1,16 +1,21 @@
 import AppError from '@shared/errors/AppError';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
+import FakeNotificationsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository';
+import { jsxExpressionContainer } from '@babel/types';
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppointmentsRepository';
 import CreateAppointmentService from './CreateAppointmentService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeAppointmentsRepository: FakeAppointmentsRepository;
+let fakeNotificationsRepository: FakeNotificationsRepository;
 let createAppointmentService: CreateAppointmentService;
 
 beforeEach(() => {
   fakeUsersRepository = new FakeUsersRepository();
   fakeAppointmentsRepository = new FakeAppointmentsRepository();
-  createAppointmentService = new CreateAppointmentService(fakeAppointmentsRepository, fakeUsersRepository);
+  fakeNotificationsRepository = new FakeNotificationsRepository();
+
+  createAppointmentService = new CreateAppointmentService(fakeAppointmentsRepository, fakeUsersRepository, fakeNotificationsRepository);
 });
 
 describe('CreateAppointment', () => {
@@ -20,6 +25,8 @@ describe('CreateAppointment', () => {
       email: 'teste@teste.com.br',
       passwordHash: '123456',
     });
+
+    const create = jest.spyOn(fakeNotificationsRepository, 'create');
 
     const appointment = await createAppointmentService.execute({
       providerID: '123456',
@@ -31,6 +38,7 @@ describe('CreateAppointment', () => {
     expect(appointment.id).toBeDefined();
     expect(appointment.userID).toBe(user.id);
     expect(appointment.providerID).toBe('123456');
+    expect(create).toHaveBeenCalled();
   });
 
   it('should not create two appointments on the same hour', async () => {
