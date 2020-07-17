@@ -20,6 +20,8 @@ export default class SendPasswordRecoveryEmailService {
   ) {}
 
   public async execute({ email }: SendPasswordRecoveryEmailRequest) {
+    const { APP_WEB_URL } = process.env;
+
     const existingUser = await this.usersRepository.findByEmail(email);
 
     if (!existingUser) {
@@ -38,7 +40,7 @@ export default class SendPasswordRecoveryEmailService {
         template: forgotPasswordTemplate,
         variables: {
           name: existingUser.name,
-          token: userToken.token,
+          link: `${APP_WEB_URL}/reset-password/${userToken.token}`,
         },
       },
     });
