@@ -20,6 +20,7 @@ import JWTTokenProvider from '@modules/users/providers/token/implementations/JWT
 
 import IStorageProvider from '@shared/providers/storage/IStorageProvider';
 import LocalStorageProvider from '@shared/providers/storage/implementations/LocalStorageProvider';
+import S3StorageProvider from '@shared/providers/storage/implementations/S3StorageProvider';
 
 import IMailProvider from '@shared/providers/mail/IMailProvider';
 import EtherealMailProvider from '@shared/providers/mail/implementations/EtherealMailProvider';
@@ -37,6 +38,6 @@ container.registerSingleton<INotificationsRepository>('NotificationsRepository',
 // Providers
 container.registerSingleton<IHashProvider>('HashProvider', BCryptHashProvider);
 container.registerSingleton<ITokenProvider>('TokenProvider', JWTTokenProvider);
-container.registerSingleton<IStorageProvider>('StorageProvider', LocalStorageProvider);
+container.registerSingleton<IStorageProvider>('StorageProvider', process.env.NODE_ENV === 'production' ? S3StorageProvider : LocalStorageProvider);
 container.registerSingleton<MailTemplateProvider>('MailTemplateProvider', HandlebarsMailTemplateProvider);
 container.registerInstance<IMailProvider>('MailProvider', container.resolve(EtherealMailProvider)); // DEV

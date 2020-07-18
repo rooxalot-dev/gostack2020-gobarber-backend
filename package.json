@@ -6,12 +6,14 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev:server": "ts-node-dev -r tsconfig-paths/register --inspect --ignore-watch node_modules --transpileOnly --no-notify src/shared/infra/http/server.ts",
+    "prod:server": "SET NODE_ENV=production&&ts-node-dev -r tsconfig-paths/register --inspect --ignore-watch node_modules --transpileOnly --no-notify src/shared/infra/http/server.ts",
     "typeorm": "ts-node-dev -r tsconfig-paths/register --transpileOnly ./node_modules/typeorm/cli.js",
     "build": "tsc",
     "test": "jest"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^8.3.9",
+    "aws-sdk": "^2.715.0",
     "bcrypt": "^4.0.1",
     "class-transformer": "^0.2.3",
     "cors": "^2.8.5",
