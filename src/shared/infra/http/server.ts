@@ -10,8 +10,10 @@ import '@shared/container';
 
 import uploadOptions from '@config/upload';
 import AppError from '@shared/errors/AppError';
-
 import routes from './routes';
+
+const PORT = process.env.PORT || 3333;
+const ENV = process.env.NODE_ENV || 'development';
 
 const app = express();
 
@@ -32,4 +34,4 @@ app.use((error: any, request: Request, response: Response, next: NextFunction) =
   return next();
 });
 
-app.listen(3333, () => console.log(' App listening on port 3333'));
+app.listen(PORT, () => console.log(`App listening on port ${PORT} in ${ENV}`));

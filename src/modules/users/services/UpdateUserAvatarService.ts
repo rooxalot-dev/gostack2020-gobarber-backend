@@ -27,14 +27,13 @@ class UpdateUserAvatarService {
 
      if (user.avatar) {
        await this.storageProvider.remove(user.avatar);
-       await this.storageProvider.store(avatarPath);
      }
 
-     user.avatar = avatarPath;
+     await this.storageProvider.store(avatarPath);
 
+     user.avatar = avatarPath;
      await this.repository.save(user);
 
-     delete user.passwordHash;
      return user;
    }
  }
