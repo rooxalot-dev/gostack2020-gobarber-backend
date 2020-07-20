@@ -2,6 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/providers/crypto/IHashProvider';
+import ICacheProvider from '@shared/providers/cache/ICacheProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
 import User from '../infra/typeorm/entities/User';
 
@@ -17,6 +18,7 @@ class CreateUserService {
   constructor(
     @inject('UsersRepository') private repository: IUsersRepository,
     @inject('HashProvider') private hashProvider: IHashProvider,
+    @inject('CacheProvider') private cacheProvider: ICacheProvider,
   ) { }
 
   public async execute({
@@ -36,7 +38,9 @@ class CreateUserService {
       isProvider,
     });
 
-    delete newUser.passwordHash;
+    // Limpa o cache de listagem de prestadores para que sejam retornadas as novas informaçoes
+    const cacheKey = 'list-providers';
+    this.cacheProvider.invalidatePrefix(cacheKey);
 
     return newUser;
   }

@@ -38,6 +38,7 @@ describe('ListProviderMonthAvailability', () => {
       .map((appointmentHour) => appointmentHour + 8) // Agendamentos se iniciam as 8h
       .map((appointmentHour) => (
         fakeAppointmentsRepository.create({
+          userID: 'user',
           providerID: createdProvider.id,
           date: new Date(2020, monthToTest, 1, appointmentHour, 0, 0),
         })
@@ -74,6 +75,7 @@ describe('ListProviderMonthAvailability', () => {
     jest.spyOn(Date, 'now').mockImplementationOnce(() => new Date(2020, monthToTest, 2).getTime());
 
     await fakeAppointmentsRepository.create({
+      userID: 'user',
       providerID: createdProvider.id,
       date: new Date(2020, monthToTest, 1, 12, 0, 0),
     });

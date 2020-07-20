@@ -2,21 +2,22 @@ import 'reflect-metadata';
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
-import User from '@modules/users/infra/typeorm/entities/User';
-import { create } from 'handlebars';
-import { exec } from 'child_process';
+import ICacheProvider from '@shared/providers/cache/ICacheProvider';
+import FakeCacheProvider from '@shared/providers/cache/fakes/FakeCacheProvider';
 import ListProvidersService from './ListProvidersService';
 
 describe('ListProviders', () => {
   let fakeUsersRepository: IUsersRepository;
+  let fakeCacheProvider: ICacheProvider;
   let listProvidersService: ListProvidersService;
 
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
-    listProvidersService = new ListProvidersService(fakeUsersRepository);
+    fakeCacheProvider = new FakeCacheProvider();
+    listProvidersService = new ListProvidersService(fakeUsersRepository, fakeCacheProvider);
   });
 
-  it('should be able to list all the users whit the provider flag', async () => {
+  it('should be able to list all the users with the provider flag', async () => {
     const createdUser = await fakeUsersRepository.create({
       name: 'Teste 1',
       email: 'teste1@teste.com.br',

@@ -1,7 +1,7 @@
 import ICacheProvider from '../ICacheProvider';
 
 export default class FakeCacheProvider implements ICacheProvider {
-  private cacheObject = {};
+  private cacheObject: any = {};
 
   public async save(key: string, value: any): Promise<void> {
     Object.assign(this.cacheObject, { [key]: value });
@@ -9,6 +9,7 @@ export default class FakeCacheProvider implements ICacheProvider {
 
   public async recover<T>(key: string): Promise<T | null> {
     const data = this.cacheObject[key] as any;
+
     if (!data) {
       return null;
     }

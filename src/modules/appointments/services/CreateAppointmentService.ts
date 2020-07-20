@@ -5,6 +5,7 @@ import AppError from '@shared/errors/AppError';
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
+import ICacheProvider from '@shared/providers/cache/ICacheProvider';
 import Appointment from '../infra/typeorm/entities/Appointment';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
@@ -20,6 +21,7 @@ class CreateAppointmentService {
     @inject('AppointmentsRepository') private repository: IAppointmentsRepository,
     @inject('UsersRepository') private usersRepository: IUsersRepository,
     @inject('NotificationsRepository') private notificationsRepository: INotificationsRepository,
+    @inject('CacheProvider') private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ providerID, userID, date }: CreateAppointmentRequest): Promise<Appointment> {
@@ -51,6 +53,10 @@ class CreateAppointmentService {
     await this.notificationsRepository.create({ recipientId: providerID, content: `Olá! Novo agendamento marcado dia ${formattedDate}` });
 
     const appointment = this.repository.create({ providerID, userID, date: appointmentDate });
+
+    // Limpa o cache para que retorne os agendamentos atualizados
+    const cacheKey = `list-provider-appointments:${providerID}:${format(date, 'yyyy-MM-dd')}`;
+    this.cacheProvider.invalidate(cacheKey);
 
     return appointment;
   }
