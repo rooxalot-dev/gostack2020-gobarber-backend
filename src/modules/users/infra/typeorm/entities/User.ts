@@ -29,7 +29,17 @@ class User {
 
   @Expose({ name: 'avatarUrl' })
   getAvatarUrl(): string | null {
-    return this.avatar ? `${APP_API_URL}/files/${this.avatar}` : null;
+    const { NODE_ENV, S3_BUCKET, AWS_REGION } = process.env;
+
+    if (!this.avatar) {
+      return null;
+    }
+
+    if (NODE_ENV === 'production') {
+      return `https://${S3_BUCKET}.s3.${AWS_REGION}.amazonaws.com/${this.avatar}`;
+    }
+
+    return `${APP_API_URL}/files/${this.avatar}`;
   }
 
   @CreateDateColumn({ name: 'created_at' })
