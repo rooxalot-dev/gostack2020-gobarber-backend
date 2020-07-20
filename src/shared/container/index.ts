@@ -12,6 +12,9 @@ import AppointmentsRepository from '@modules/appointments/infra/typeorm/reposito
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
 
+import ICacheProvider from '@shared/providers/cache/ICacheProvider';
+import RedisCacheProvider from '@shared/providers/cache/implementations/RedisCacheProvider';
+
 import IHashProvider from '@shared/providers/crypto/IHashProvider';
 import BCryptHashProvider from '@shared/providers/crypto/implementations/bcrypt/BCryptHashProvider';
 
@@ -36,8 +39,9 @@ container.registerSingleton<IAppointmentsRepository>('AppointmentsRepository', A
 container.registerSingleton<INotificationsRepository>('NotificationsRepository', NotificationsRepository);
 
 // Providers
+container.registerInstance<ICacheProvider>('CacheProvider', container.resolve(RedisCacheProvider));
 container.registerSingleton<IHashProvider>('HashProvider', BCryptHashProvider);
 container.registerSingleton<ITokenProvider>('TokenProvider', JWTTokenProvider);
 container.registerSingleton<IStorageProvider>('StorageProvider', process.env.NODE_ENV === 'production' ? S3StorageProvider : LocalStorageProvider);
 container.registerSingleton<MailTemplateProvider>('MailTemplateProvider', HandlebarsMailTemplateProvider);
-container.registerInstance<IMailProvider>('MailProvider', container.resolve(EtherealMailProvider)); // DEV
+container.registerInstance<IMailProvider>('MailProvider', container.resolve(EtherealMailProvider));

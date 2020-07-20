@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@types/ioredis": "^4.17.2",
     "@types/jsonwebtoken": "^8.3.9",
     "@types/mime-types": "^2.1.0",
     "aws-sdk": "^2.715.0",
@@ -24,6 +25,7 @@
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "handlebars": "^4.7.6",
+    "ioredis": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "mime-types": "^2.1.27",
     "mongodb": "^3.5.9",
