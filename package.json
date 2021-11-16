@@ -15,7 +15,7 @@
     "@types/ioredis": "^4.17.2",
     "@types/jsonwebtoken": "^8.3.9",
     "@types/mime-types": "^2.1.0",
-    "aws-sdk": "^2.715.0",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^4.0.1",
     "class-transformer": "^0.2.3",
     "cors": "^2.8.5",
